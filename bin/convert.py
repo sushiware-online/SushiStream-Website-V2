@@ -73,11 +73,11 @@ try:
         {"_id": query_id},
         {"$set": {
             "status": "ready",
-            "formats": {
+            "files": {
                 "mp4": f"/user-content/videos/{filename_base}.mp4",
-                "ts": f"/user-content/videos/{filename_base}.ts"
-            },
-            "thumbnail": f"/user-content/videos/{filename_base}.jpg"
+                "mpeg1_ts": f"/user-content/videos/{filename_base}.ts",
+                "thumbnail": f"/user-content/videos/{filename_base}.jpg"
+            }
         }}
     )
     print(f"Database update acknowledged: {result.modified_count} docs changed.")
