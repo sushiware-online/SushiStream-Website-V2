@@ -1,0 +1,56 @@
+.player-container {
+    margin: 20px 0;
+    max-width: 960px;
+}
+
+video, #jsmpeg-canvas {
+    width: 100%;
+    max-width: 960px;
+    height: auto;
+    aspect-ratio: 240 / 136;
+    background: #000;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid #333;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.tab-btn {
+    background: #282834;
+    color: #bbb;
+}
+
+.tab-btn.active {
+    background: #00e5ff;
+    color: #000;
+}
+
+.meta-box {
+    margin-top: 15px;
+    padding: 16px;
+    background: #24242c;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-banner {
+    padding: 20px;
+    border-radius: 6px;
+    margin: 20px 0;
+}
+
+.banner-processing { background: #3e2723; border: 1px solid #ff6f00; }
+.banner-failed { background: #b71c1c; border: 1px solid #ff1744; }
+
+.downloads {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #3d3d4a;
+}

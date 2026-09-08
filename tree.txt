@@ -1,0 +1,34 @@
+.
+├── bin
+│   └── convert.php
+├── composer.json
+├── docker-compose.yml
+├── public
+│   ├── admin
+│   │   └── index.php
+│   ├── api
+│   │   └── videos
+│   │       └── index.php
+│   ├── global.css
+│   ├── index.php
+│   ├── login
+│   │   └── index.php
+│   ├── logout
+│   │   └── index.php
+│   ├── register
+│   │   └── index.php
+│   ├── thumb.php
+│   ├── upload
+│   │   └── index.php
+│   ├── videos
+│   │   ├── index.php
+│   │   └── video.css
+│   └── watch
+│       ├── index.php
+│       └── watch.css
+└── src
+    └── Services
+        ├── AuthService.php
+        └── VideoUploadService.php
+
+14 directories, 18 files

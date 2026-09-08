@@ -1,0 +1,62 @@
+.video-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+}
+
+.video-card {
+    background: #24242c;
+    border: 1px solid #3d3d4a;
+    border-radius: 8px;
+    overflow: hidden;
+    flex: 0 0 192px;      /* Updated to 192px width */
+    max-width: 192px;     /* Updated to 192px max-width */
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
+    border-color: #00e5ff;
+}
+
+.video-card .thumbnail {
+    width: 100%;
+    height: 108px;        /* Updated to 108px for a precise 192x108 (16:9) ratio */
+    object-fit: cover;
+    display: block;
+    background-color: #000;
+}
+
+.video-card .meta {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.video-card .title {
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.video-card .uploader {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.status-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    align-self: flex-start;
+    margin-top: 4px;
+}
+
+.status-ready { background: #00c853; color: #000; }
+.status-processing { background: #ffd600; color: #000; }
+.status-failed { background: #d50000; color: #fff; }
