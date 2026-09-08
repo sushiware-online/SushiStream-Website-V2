@@ -99,6 +99,7 @@ function formatVideoResponse($doc, string $baseUrl): array
             'watch'     => $baseUrl . '/watch/index.php?v=' . (string)$doc['_id'],
             'mp4'       => !empty($files['mp4']) ? $baseUrl . '/user-content/videos/' . rawurlencode($files['mp4']) : null,
             'mpeg1_ts'  => !empty($files['ts']) ? $baseUrl . '/user-content/videos/' . rawurlencode($files['ts']) : null,
+	    'mpg'       => !empty($files['mpg']) ? $baseUrl . '/user-content/videos/' . rawurlencode($files['mpg']) : null,
             'thumbnail' => !empty($files['thumb']) ? $baseUrl . '/user-content/videos/' . rawurlencode($files['thumb']) : null,
         ],
         'uploaded_at' => isset($doc['uploaded_at']) ? $doc['uploaded_at']->toDateTime()->format(DATE_ATOM) : null
