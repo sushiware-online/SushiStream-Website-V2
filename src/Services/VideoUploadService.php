@@ -59,9 +59,25 @@ class VideoUploadService
             $videoId = (string)$insertResult->getInsertedId();
             $convertScript = realpath(__DIR__ . '/../../bin/convert.php');
 
-            // Trigger non-blocking background conversion
-            $cmd = sprintf('php %s %s %s > /dev/null 2>&1 &', escapeshellarg($convertScript), escapeshellarg($videoId), escapeshellarg($originalPath));
-            exec($cmd);
+	    // 1. Hardcode the Python3 path
+	    $pythonBinary = '/usr/bin/python3'; 
+
+	    // 2. Point to the new Python script
+	    $convertScript = realpath(__DIR__ . '/../../bin/convert.py');
+	    $videoDir = realpath(__DIR__ . '/../../public/user-content/videos');
+	    $logPath = $videoDir . '/ffmpeg_debug.log';
+
+	    // 3. Build the command
+	    $cmd = sprintf(
+    	    	'%s %s %s %s > %s 2>&1 &',
+    		$pythonBinary,
+    		escapeshellarg($convertScript),
+    		escapeshellarg($videoId),
+    	 	escapeshellarg($originalPath),
+    	 	escapeshellarg($logPath)
+	    );
+
+	    exec($cmd, $output, $returnVar);	
 
             return $videoId;
         } catch (\Exception $e) {
