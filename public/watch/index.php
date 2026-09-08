@@ -100,15 +100,17 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
                     document.getElementById('mp4-player').pause();
 
                     if (!jsmpegPlayer) {
-                        jsmpegPlayer = new JSMpeg.Player("<?php echo $tsUrl; ?>", {
-                            canvas: document.getElementById('jsmpeg-canvas'),
-                            autoplay: true,
-                            audio: true,
-                            loop: false
-                        });
-                    } else {
-                        jsmpegPlayer.play();
-                    }
+						jsmpegPlayer = new JSMpeg.Player("<?php echo $tsUrl; ?>", {
+							canvas: document.getElementById('jsmpeg-canvas'),
+							autoplay: true,
+							audio: true,
+							loop: false,
+							streaming: false,   // <-- static VOD file, not a live socket feed
+							chunkSize: 1024 * 1024
+						});
+					} else {
+						jsmpegPlayer.play();
+					}
                 }
             }
         </script>
