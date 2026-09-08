@@ -60,7 +60,8 @@ try:
     if not run_ffmpeg(mp4_cmd, "MP4"): sys.exit(1)
 
     # 5. Generate MPEG-TS
-    ts_cmd = ["ffmpeg", "-y", "-i", input_path, "-f", "mpegts", "-codec:v", "mpeg1video", "-codec:a", "mp2", ts_path]
+    ts_cmd = [
+    "ffmpeg", "-y", "-i", input_path, "-f", "mpegts", "-codec:v", "mpeg1video", "-b:v", "1000k", "-bf", "0", "-r", "30", "-codec:a", "mp2", "-ar", "44100", "-ac", "1", "-b:a", "128k", ts_path]
     if not run_ffmpeg(ts_cmd, "TS Stream"): sys.exit(1)
 
     # 6. Generate Thumbnail
