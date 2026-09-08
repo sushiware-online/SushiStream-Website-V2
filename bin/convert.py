@@ -74,9 +74,11 @@ try:
         {"$set": {
             "status": "ready",
             "files": {
-                "mp4": f"/user-content/videos/{filename_base}.mp4",
-                "mpeg1_ts": f"/user-content/videos/{filename_base}.ts",
-                "thumbnail": f"/user-content/videos/{filename_base}.jpg"
+                "mp4": f"{filename_base}.mp4",
+                "mpeg1_ts": f"{filename_base}.ts",
+                "ts": f"{filename_base}.ts",
+                "thumbnail": f"{filename_base}.jpg",
+                "thumb": f"{filename_base}.jpg"
             }
         }}
     )
