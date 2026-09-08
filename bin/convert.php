@@ -32,22 +32,22 @@ $mp4Path   = $dir . DIRECTORY_SEPARATOR . $mp4Filename;
 $tsPath    = $dir . DIRECTORY_SEPARATOR . $tsFilename;
 $thumbPath = $dir . DIRECTORY_SEPARATOR . $thumbFilename;
 
-// Single-pass FFmpeg generation
+$phpBinary = PHP_BINARY; 
+$convertScript = realpath(__DIR__ . '/../../bin/convert.php');
+$logPath = __DIR__ . '/../../public/user-content/videos/ffmpeg_debug.log';
+
+// Build the command and log it to PHP-FPM error logs just in case
 $cmd = sprintf(
-    'ffmpeg -y -i %s ' .
-    // Stream 1: MP4
-    '-vf "scale=240:136" -c:v libx264 -preset fast -pix_fmt yuv420p -c:a aac -b:a 64k %s ' .
-    // Stream 2: MPEG-1 (Added -bf 0 and -ac 1 for JSMpeg compatibility)
-    '-f mpegts -codec:v mpeg1video -s 240x136 -b:v 224k -r 30 -bf 0 -codec:a mp2 -b:a 64k -ar 44100 -ac 1 %s ' .
-    // Stream 3: Thumbnail
-    '-ss 00:00:01 -vframes 1 -q:v 2 %s 2>&1',
+    '%s %s %s %s > %s 2>&1 &',
+    escapeshellarg($phpBinary ?: 'php'), 
+    escapeshellarg($convertScript),
+    escapeshellarg($videoId),
     escapeshellarg($originalPath),
-    escapeshellarg($mp4Path),
-    escapeshellarg($tsPath),
-    escapeshellarg($thumbPath)
+    escapeshellarg($logPath)
 );
 
-exec($cmd, $output, $returnVar);
+error_log("SushiStream Executing: " . $cmd);
+exec($cmd);
 
 if ($returnVar === 0 && file_exists($mp4Path) && file_exists($tsPath)) {
     $db->videos->updateOne(
