@@ -60,7 +60,7 @@ class VideoUploadService
             $convertScript = realpath(__DIR__ . '/../../bin/convert.php');
 
 	    // 1. Hardcode the Python3 path
-	    $pythonBinary = '/usr/bin/python3'; 
+	    $pythonBinary = '/usr/bin/python3 -u'; 
 
 	    // 2. Point to the new Python script
 	    $convertScript = realpath(__DIR__ . '/../../bin/convert.py');
