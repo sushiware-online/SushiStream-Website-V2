@@ -67,14 +67,14 @@ try:
         "ffmpeg", "-y", "-i", input_path,
         "-f", "mpegts",
         "-codec:v", "mpeg1video",
-        "-b:v", "1000k",
+        "-b:v", "224k",
         "-bf", "0",
         "-r", "30",
-        "-s", "240x144",
+        "-s", "240x136",
         "-codec:a", "mp2",
         "-ar", "44100",
         "-ac", "1",
-        "-b:a", "128k",
+        "-b:a", "64k",
         ts_path
     ]
     if not run_ffmpeg(ts_cmd, "TS Stream"): sys.exit(1)
@@ -85,13 +85,14 @@ try:
         "ffmpeg", "-y", "-i", input_path,
         "-f", "mpeg",
         "-codec:v", "mpeg1video",
-        "-b:v", "1000k",
+        "-b:v", "224k",
         "-bf", "0",
         "-r", "30",
+        "-s", "240x136",
         "-codec:a", "mp2",
         "-ar", "44100",
         "-ac", "1",
-        "-b:a", "128k",
+        "-b:a", "64k",
         mpg_path
     ]
     if not run_ffmpeg(mpg_cmd, "MPEG-1 Program Stream"): sys.exit(1)
