@@ -19,7 +19,7 @@ if (!file_exists($originalPath)) {
 
 $mongoHost = getenv('MONGO_HOST') ?: '127.0.0.1';
 $mongo = new MongoClient("mongodb://$mongoHost:27017");
-$db = $mongo->selectDatabase("sushi_stream");
+$db = $mongo->selectDatabase("sushistream_v2");
 
 $dir = dirname($originalPath);
 $baseName = pathinfo($originalPath, PATHINFO_FILENAME);

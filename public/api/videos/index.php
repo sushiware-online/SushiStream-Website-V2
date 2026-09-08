@@ -16,7 +16,7 @@ $mongoHost = getenv('MONGO_HOST') ?: '127.0.0.1';
 
 try {
     $client = new Client("mongodb://$mongoHost:27017");
-    $db = $client->sushi_stream;
+    $db = $client->sushistream_v2;
     $collection = $db->videos;
 
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";

@@ -5,7 +5,7 @@ use MongoDB\Client as MongoClient;
 
 $mongoHost = getenv('MONGO_HOST') ?: '127.0.0.1';
 $mongo = new MongoClient("mongodb://$mongoHost:27017");
-$db = $mongo->selectDatabase("sushi_stream");
+$db = $mongo->selectDatabase("sushistream_v2");
 
 $videos = $db->videos->find([], ['sort' => ['uploaded_at' => -1]]);
 ?>
