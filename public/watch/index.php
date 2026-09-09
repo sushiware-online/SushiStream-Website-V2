@@ -24,7 +24,7 @@ if (!$video) {
 
 $status = $video['status'] ?? 'ready';
 $mp4Url = !empty($video['files']['mp4']) ? '/user-content/videos/' . rawurlencode($video['files']['mp4']) : null;
-$tsUrl = !empty($video['files']['ts']) ? '/user-content/videos/' . rawurlencode($video['files']['ts']) : null;
+$mpgUrl = !empty($video['files']['mpg']) ? '/user-content/videos/' . rawurlencode($video['files']['mpg']) : null;
 $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurlencode($video['files']['thumb']) : null;
 ?>
 <!DOCTYPE html>
@@ -34,7 +34,6 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
     <title><?php echo htmlspecialchars($video['title']); ?> - SushiStream v2</title>
     <link rel="stylesheet" href="/global.css">
     <link rel="stylesheet" href="/watch/watch.css">
-    <script src="https://cdn.jsdelivr.net/gh/phoboslab/jsmpeg@master/jsmpeg.min.js"></script>
 </head>
 <body>
     <p><a href="/videos/index.php">&larr; Back to Videos</a></p>
@@ -43,7 +42,7 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
     <?php if ($status === 'processing'): ?>
         <div class="status-banner banner-processing">
             <h2>Video is currently processing...</h2>
-            <p>FFmpeg is encoding MP4 (H.264+AAC) and MPEG-1 (TS+MP2). Refresh in a few moments.</p>
+            <p>FFmpeg is encoding MP4 (H.264+AAC) and MPEG-1 (Program Stream). Refresh in a few moments.</p>
         </div>
     <?php elseif ($status === 'failed'): ?>
         <div class="status-banner banner-failed">
@@ -53,7 +52,7 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
     <?php else: ?>
         <div class="tabs">
             <button class="tab-btn active" onclick="switchPlayer('mp4')">HTML5 Player (MP4)</button>
-            <button class="tab-btn" onclick="switchPlayer('jsmpeg')">WebAssembly Player (MPEG-1)</button>
+            <button class="tab-btn" onclick="switchPlayer('mpg')">MPEG-1 Player (MPG)</button>
         </div>
 
         <div id="mp4-container" class="player-container">
@@ -63,14 +62,11 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
             </video>
         </div>
 
-        <div id="jsmpeg-container" class="player-container" style="display: none;">
-            <canvas id="jsmpeg-canvas"></canvas>
-            <div class="player-controls">
-                <button onclick="jsmpegPlayer.play()">Play</button>
-                <button onclick="jsmpegPlayer.pause()">Pause</button>
-                <button onclick="jsmpegPlayer.volume = 0">Mute</button>
-                <button onclick="jsmpegPlayer.volume = 1">Unmute</button>
-            </div>
+        <div id="mpg-container" class="player-container" style="display: none;">
+            <video id="mpg-player" controls poster="<?php echo htmlspecialchars($thumbUrl); ?>">
+                <source src="<?php echo htmlspecialchars($mpgUrl); ?>" type="video/mpeg">
+                Your browser does not support MPEG-1 playback.
+            </video>
         </div>
 
         <div class="meta-box">
@@ -80,40 +76,11 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
             <div class="downloads">
                 <strong>Raw Streams:</strong>
                 <a href="<?php echo htmlspecialchars($mp4Url); ?>" download>Download MP4 (H.264)</a> |
-                <a href="<?php echo htmlspecialchars($tsUrl); ?>" download>Download MPEG-1 TS (For M5 / Clients)</a>
+                <a href="<?php echo htmlspecialchars($mpgUrl); ?>" download>Download MPEG-1 Program Stream (MPG)</a>
             </div>
         </div>
 
-        <script>
-            let jsmpegPlayer = null;
-            function switchPlayer(type) {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                if (type === 'mp4') {
-                    document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                    document.getElementById('mp4-container').style.display = 'block';
-                    document.getElementById('jsmpeg-container').style.display = 'none';
-                    if (jsmpegPlayer) jsmpegPlayer.pause();
-                } else {
-                    document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                    document.getElementById('mp4-container').style.display = 'none';
-                    document.getElementById('jsmpeg-container').style.display = 'block';
-                    document.getElementById('mp4-player').pause();
-
-                    if (!jsmpegPlayer) {
-						jsmpegPlayer = new JSMpeg.Player("<?php echo $tsUrl; ?>", {
-							canvas: document.getElementById('jsmpeg-canvas'),
-							autoplay: true,
-							audio: true,
-							loop: false,
-							streaming: false,   // <-- static VOD file, not a live socket feed
-							chunkSize: 1024 * 1024
-						});
-					} else {
-						jsmpegPlayer.play();
-					}
-                }
-            }
-        </script>
+        <script src="/watch/watch.js"></script>
     <?php endif; ?>
 </body>
 </html>

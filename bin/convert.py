@@ -37,7 +37,6 @@ except:
 output_dir = os.path.dirname(input_path)
 filename_base = os.path.splitext(os.path.basename(input_path))[0]
 mp4_path = os.path.join(output_dir, f"{filename_base}.mp4")
-ts_path = os.path.join(output_dir, f"{filename_base}.ts")
 mpg_path = os.path.join(output_dir, f"{filename_base}.mpg")
 thumb_path = os.path.join(output_dir, f"{filename_base}.jpg")
 
@@ -60,27 +59,7 @@ try:
     mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-c:a", "aac", mp4_path]
     if not run_ffmpeg(mp4_cmd, "MP4"): sys.exit(1)
 
-    # 5. Generate MPEG-TS (for jsmpeg in-browser player)
-    #    -bf 0 is required: jsmpeg's MPEG-1 decoder does not support B-frames.
-    #    Explicit audio/video params avoid ffmpeg defaults that jsmpeg can't parse.
-    ts_cmd = [
-        "ffmpeg", "-y", "-i", input_path,
-        "-f", "mpegts",
-        "-codec:v", "mpeg1video",
-        "-b:v", "224k",
-        "-bf", "0",
-        "-r", "30",
-        "-s", "240x136",
-        "-codec:a", "mp2",
-        "-ar", "44100",
-        "-ac", "1",
-        "-b:a", "64k",
-        ts_path
-    ]
-    if not run_ffmpeg(ts_cmd, "TS Stream"): sys.exit(1)
-
-    # 5b. Generate true MPEG-1 Program Stream (.mpg) — separate from the jsmpeg TS,
-    #     for other clients/tools that expect a real Program Stream container.
+    # 5. Generate true MPEG-1 Program Stream (.mpg) for native <video> playback.
     mpg_cmd = [
         "ffmpeg", "-y", "-i", input_path,
         "-f", "mpeg",
@@ -109,8 +88,6 @@ try:
             "status": "ready",
             "files": {
                 "mp4": f"{filename_base}.mp4",
-                "mpeg1_ts": f"{filename_base}.ts",
-                "ts": f"{filename_base}.ts",
                 "mpg": f"{filename_base}.mpg",
                 "thumbnail": f"{filename_base}.jpg",
                 "thumb": f"{filename_base}.jpg"
