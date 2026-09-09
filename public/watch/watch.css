@@ -7,7 +7,6 @@ video, #jsmpeg-canvas {
     width: 100%;
     max-width: 960px;
     height: auto;
-    aspect-ratio: 240 / 136;
     background: #000;
     display: block;
     border-radius: 6px;
@@ -53,4 +52,22 @@ video, #jsmpeg-canvas {
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px solid #3d3d4a;
+}
+
+.format-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+    font-size: 0.9em;
+}
+
+.format-table th, .format-table td {
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid #3d3d4a;
+}
+
+.format-table th {
+    color: #999;
+    font-weight: 600;
 }

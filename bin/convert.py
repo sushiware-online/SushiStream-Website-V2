@@ -40,10 +40,9 @@ mp4_path = os.path.join(output_dir, f"{filename_base}.mp4")
 mpg_path = os.path.join(output_dir, f"{filename_base}.mpg")
 thumb_path = os.path.join(output_dir, f"{filename_base}.jpg")
 
-# If the uploaded source file is already an .mp4, its path is identical to
-# mp4_path above. ffmpeg refuses to use the same file as both input and
-# output ("Output file is empty / same file" error), so in that case we
-# encode to a temp file first and then atomically swap it into place.
+# If the uploaded source is already an .mp4, input_path and mp4_path are the
+# same file. ffmpeg can't use the same file as both input and output, so in
+# that case we encode to a temp file and swap it into place afterward.
 mp4_output_target = mp4_path
 mp4_is_same_as_input = os.path.abspath(input_path) == os.path.abspath(mp4_path)
 if mp4_is_same_as_input:
@@ -65,11 +64,10 @@ def run_ffmpeg(command, step_name):
 
 try:
     # 4. Generate MP4 (H.264 + AAC)
-    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-s", "240x135", "-c:a", "aac", mp4_output_target]
+    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-c:a", "aac", mp4_output_target]
     if not run_ffmpeg(mp4_cmd, "MP4"): sys.exit(1)
 
-    # If we encoded to a temp file (because the source was already .mp4),
-    # swap it into place now that encoding succeeded.
+    # If we encoded to a temp file (source was already .mp4), swap it into place.
     if mp4_is_same_as_input:
         os.replace(mp4_output_target, mp4_path)
 

@@ -26,6 +26,40 @@ $status = $video['status'] ?? 'ready';
 $mp4Url = !empty($video['files']['mp4']) ? '/user-content/videos/' . rawurlencode($video['files']['mp4']) : null;
 $mpgUrl = !empty($video['files']['mpg']) ? '/user-content/videos/' . rawurlencode($video['files']['mpg']) : null;
 $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurlencode($video['files']['thumb']) : null;
+
+$mp4Meta = $video['metadata']['mp4'] ?? [];
+$mpgMeta = $video['metadata']['mpg'] ?? [];
+
+function format_duration($seconds) {
+    if (!$seconds) return null;
+    $seconds = (int) round($seconds);
+    $h = intdiv($seconds, 3600);
+    $m = intdiv($seconds % 3600, 60);
+    $s = $seconds % 60;
+    return $h > 0 ? sprintf('%d:%02d:%02d', $h, $m, $s) : sprintf('%d:%02d', $m, $s);
+}
+
+function format_bytes($bytes) {
+    if (!$bytes) return null;
+    $units = ['B', 'KB', 'MB', 'GB'];
+    $i = 0;
+    while ($bytes >= 1024 && $i < count($units) - 1) {
+        $bytes /= 1024;
+        $i++;
+    }
+    return round($bytes, $i === 0 ? 0 : 1) . ' ' . $units[$i];
+}
+
+function format_bitrate($bps) {
+    if (!$bps) return null;
+    return round($bps / 1000) . ' kbps';
+}
+
+$duration = format_duration($mp4Meta['duration_seconds'] ?? $mpgMeta['duration_seconds'] ?? null);
+$resolution = (!empty($mp4Meta['width']) && !empty($mp4Meta['height']))
+    ? $mp4Meta['width'] . 'x' . $mp4Meta['height']
+    : null;
+$fps = $mp4Meta['fps'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,7 +106,47 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
         <div class="meta-box">
             <div><strong>Uploader:</strong> <?php echo htmlspecialchars($video['uploader']); ?></div>
             <div><strong>Uploaded:</strong> <?php echo date("F j, Y, g:i a", $video['uploaded_at']->toDateTime()->getTimestamp()); ?></div>
-            <div><strong>Resolution:</strong> 240x136</div>
+            <?php if ($duration): ?>
+                <div><strong>Duration:</strong> <?php echo htmlspecialchars($duration); ?></div>
+            <?php endif; ?>
+            <?php if ($resolution): ?>
+                <div><strong>Resolution:</strong> <?php echo htmlspecialchars($resolution); ?><?php echo $fps ? ' @ ' . htmlspecialchars($fps) . ' fps' : ''; ?></div>
+            <?php endif; ?>
+
+            <?php if (!empty($mp4Meta) || !empty($mpgMeta)): ?>
+            <table class="format-table">
+                <thead>
+                    <tr>
+                        <th>Format</th>
+                        <th>Video</th>
+                        <th>Audio</th>
+                        <th>Bitrate</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($mp4Meta)): ?>
+                    <tr>
+                        <td>MP4</td>
+                        <td><?php echo htmlspecialchars(strtoupper($mp4Meta['video_codec'] ?? 'n/a')); ?></td>
+                        <td><?php echo htmlspecialchars(strtoupper($mp4Meta['audio_codec'] ?? 'n/a')); ?></td>
+                        <td><?php echo htmlspecialchars(format_bitrate($mp4Meta['bitrate'] ?? null) ?? 'n/a'); ?></td>
+                        <td><?php echo htmlspecialchars(format_bytes($mp4Meta['size_bytes'] ?? null) ?? 'n/a'); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($mpgMeta)): ?>
+                    <tr>
+                        <td>MPG</td>
+                        <td><?php echo htmlspecialchars(strtoupper($mpgMeta['video_codec'] ?? 'n/a')); ?></td>
+                        <td><?php echo htmlspecialchars(strtoupper($mpgMeta['audio_codec'] ?? 'n/a')); ?></td>
+                        <td><?php echo htmlspecialchars(format_bitrate($mpgMeta['bitrate'] ?? null) ?? 'n/a'); ?></td>
+                        <td><?php echo htmlspecialchars(format_bytes($mpgMeta['size_bytes'] ?? null) ?? 'n/a'); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+
             <div class="downloads">
                 <strong>Raw Streams:</strong>
                 <a href="<?php echo htmlspecialchars($mp4Url); ?>" download>Download MP4 (H.264)</a> |
