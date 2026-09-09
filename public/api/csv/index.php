@@ -23,7 +23,7 @@ $baseUrl = $protocol . $_SERVER['HTTP_HOST'];
 $output = fopen('php://output', 'w');
 
 // (Optional) Add a header row. Remove this line if you strictly want data only!
-fputcsv($output, ['Info', 'MPG_URL', 'MP4_URL']);
+fputcsv($output, ['#Info', 'MPG_URL', 'MP4_URL']);
 
 // Fetch all videos (you can add ['status' => 'ready'] to find() if you want to exclude processing/failed ones)
 $cursor = $collection->find();
