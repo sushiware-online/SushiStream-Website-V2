@@ -40,6 +40,15 @@ mp4_path = os.path.join(output_dir, f"{filename_base}.mp4")
 mpg_path = os.path.join(output_dir, f"{filename_base}.mpg")
 thumb_path = os.path.join(output_dir, f"{filename_base}.jpg")
 
+# If the uploaded source file is already an .mp4, its path is identical to
+# mp4_path above. ffmpeg refuses to use the same file as both input and
+# output ("Output file is empty / same file" error), so in that case we
+# encode to a temp file first and then atomically swap it into place.
+mp4_output_target = mp4_path
+mp4_is_same_as_input = os.path.abspath(input_path) == os.path.abspath(mp4_path)
+if mp4_is_same_as_input:
+    mp4_output_target = os.path.join(output_dir, f"{filename_base}.tmp.mp4")
+
 def run_ffmpeg(command, step_name):
     print(f"Running FFmpeg for: {step_name}...")
     try:
@@ -56,8 +65,13 @@ def run_ffmpeg(command, step_name):
 
 try:
     # 4. Generate MP4 (H.264 + AAC)
-    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-c:a", "aac", mp4_path]
+    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-s", "240x135", "-c:a", "aac", mp4_output_target]
     if not run_ffmpeg(mp4_cmd, "MP4"): sys.exit(1)
+
+    # If we encoded to a temp file (because the source was already .mp4),
+    # swap it into place now that encoding succeeded.
+    if mp4_is_same_as_input:
+        os.replace(mp4_output_target, mp4_path)
 
     # 5. Generate true MPEG-1 Program Stream (.mpg) for native <video> playback.
     mpg_cmd = [
@@ -67,7 +81,7 @@ try:
         "-b:v", "224k",
         "-bf", "0",
         "-r", "30",
-        "-s", "240x136",
+        "-s", "240x135",
         "-codec:a", "mp2",
         "-ar", "44100",
         "-ac", "1",
