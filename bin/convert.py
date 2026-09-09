@@ -77,6 +77,7 @@ try:
         "-f", "mpeg",
         "-codec:v", "mpeg1video",
         "-b:v", "224k",
+        "-maxrate", "300k",
         "-bufsize", "80k",
         "-bf", "0",
         "-r", "30",
