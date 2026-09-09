@@ -22,8 +22,8 @@ $baseUrl = $protocol . $_SERVER['HTTP_HOST'];
 // Open output stream directly to the browser
 $output = fopen('php://output', 'w');
 
-// (Optional) Add a header row. Remove this line if you strictly want data only!
-fputcsv($output, ['#Info', 'MPG_URL', 'MP4_URL']);
+// Write the exact string with a # at the start, with MP4 first
+fputs($output, "# Info,MP4_URL,MPG_URL\n");
 
 // Fetch all videos (you can add ['status' => 'ready'] to find() if you want to exclude processing/failed ones)
 $cursor = $collection->find();
@@ -43,7 +43,7 @@ foreach ($cursor as $doc) {
 
     // 4. Write row to CSV
     // Note: fputcsv automatically handles enclosing fields in quotes if they contain commas
-    fputcsv($output, [$infoColumn, $mpgUrl, $mp4Url]);
+    fputcsv($output, [$infoColumn, $mp4Url, $mpgUrl]);
 }
 
 fclose($output);
