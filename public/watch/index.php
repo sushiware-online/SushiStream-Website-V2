@@ -72,7 +72,7 @@ $thumbUrl = !empty($video['files']['thumb']) ? '/user-content/videos/' . rawurle
         <div class="meta-box">
             <div><strong>Uploader:</strong> <?php echo htmlspecialchars($video['uploader']); ?></div>
             <div><strong>Uploaded:</strong> <?php echo date("F j, Y, g:i a", $video['uploaded_at']->toDateTime()->getTimestamp()); ?></div>
-            <div><strong>Resolution:</strong> 240x135</div>
+            <div><strong>Resolution:</strong> 240x136</div>
             <div class="downloads">
                 <strong>Raw Streams:</strong>
                 <a href="<?php echo htmlspecialchars($mp4Url); ?>" download>Download MP4 (H.264)</a> |
