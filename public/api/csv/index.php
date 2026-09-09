@@ -23,7 +23,7 @@ $baseUrl = $protocol . $_SERVER['HTTP_HOST'];
 $output = fopen('php://output', 'w');
 
 // Write the exact string with a # at the start, with MP4 first
-fputs($output, "# Info,MP4_URL,MPG_URL\n");
+fputs($output, "# Info,MPG_URL\n");
 
 // Fetch all videos (you can add ['status' => 'ready'] to find() if you want to exclude processing/failed ones)
 $cursor = $collection->find();
@@ -39,11 +39,11 @@ foreach ($cursor as $doc) {
 
     // 3. Generate absolute URLs for the video streams
     $mpgUrl = !empty($files['mpg']) ? $baseUrl . '/user-content/videos/' . rawurlencode($files['mpg']) : '';
-    $mp4Url = !empty($files['mp4']) ? $baseUrl . '/user-content/videos/' . rawurlencode($files['mp4']) : '';
+    //$mp4Url = !empty($files['mp4']) ? $baseUrl . '/user-content/videos/' . rawurlencode($files['mp4']) : '';
 
     // 4. Write row to CSV
     // Note: fputcsv automatically handles enclosing fields in quotes if they contain commas
-    fputcsv($output, [$infoColumn, $mp4Url, $mpgUrl]);
+    fputcsv($output, [$infoColumn, $mpgUrl]);
 }
 
 fclose($output);
