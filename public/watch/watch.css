@@ -7,7 +7,7 @@ video, #jsmpeg-canvas {
     width: 100%;
     max-width: 960px;
     height: auto;
-    aspect-ratio: 240 / 136;
+    aspect-ratio: 240 / 135;
     background: #000;
     display: block;
     border-radius: 6px;

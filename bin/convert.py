@@ -56,7 +56,7 @@ def run_ffmpeg(command, step_name):
 
 try:
     # 4. Generate MP4 (H.264 + AAC)
-    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-c:a", "aac", mp4_path]
+    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-s", "240x135", "-c:a", "aac", mp4_path]
     if not run_ffmpeg(mp4_cmd, "MP4"): sys.exit(1)
 
     # 5. Generate true MPEG-1 Program Stream (.mpg) for native <video> playback.
@@ -67,7 +67,7 @@ try:
         "-b:v", "224k",
         "-bf", "0",
         "-r", "30",
-        "-s", "240x136",
+        "-s", "240x135",
         "-codec:a", "mp2",
         "-ar", "44100",
         "-ac", "1",
