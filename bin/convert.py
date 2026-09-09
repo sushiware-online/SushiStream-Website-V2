@@ -64,7 +64,7 @@ def run_ffmpeg(command, step_name):
 
 try:
     # 4. Generate MP4 (H.264 + AAC)
-    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-c:a", "aac", mp4_output_target]
+    mp4_cmd = ["ffmpeg", "-y", "-i", input_path, "-c:v", "libx264", "-preset", "fast", "-vf", "scale=240:136:flags=lanczos,setsar=1", "-c:a", "aac", mp4_output_target]
     if not run_ffmpeg(mp4_cmd, "MP4"): sys.exit(1)
 
     # If we encoded to a temp file (source was already .mp4), swap it into place.
@@ -79,7 +79,7 @@ try:
         "-b:v", "224k",
         "-bf", "0",
         "-r", "30",
-        "-s", "240x136",
+        "-vf", "scale=240:136:flags=lanczos,setsar=1",
         "-codec:a", "mp2",
         "-ar", "44100",
         "-ac", "1",
