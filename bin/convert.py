@@ -77,6 +77,7 @@ try:
         "-f", "mpeg",
         "-codec:v", "mpeg1video",
         "-b:v", "224k",
+        "-bufsize", "80k",
         "-bf", "0",
         "-r", "30",
         "-vf", "scale=240:136:flags=lanczos,setsar=1",
